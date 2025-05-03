@@ -1,101 +1,151 @@
-import Image from "next/image";
+"use client";
+import axios from "axios";
+import { useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [noOfAutomation, setNoOfAutomation] = useState<number>(1);
+  const [noOfPages, setNoOfPages] = useState<number>(1);
+  const [search, setSearch] = useState<string>("");
+  const [expectSource, setExpectSource] = useState<string>("");
+  const [searchError, setSearchError] = useState<string | null>(null);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+  const startAutomation = async () => {
+    try {
+      if (!search.trim()) {
+        setSearchError("Search field cannot be empty.");
+        return;
+      }
+
+      await axios.post("/api/automation", {
+        noOfAutomation,
+        noOfPages,
+        search,
+        expectSource,
+      });
+    } catch (err) {
+      console.log("Automation Disrupted", err);
+    }
+  };
+
+  console.log({
+    noOfAutomation,
+    noOfPages,
+    search,
+    expectSource,
+  });
+
+  const stopAutomation = async () => {
+    try {
+      await axios.delete("/api/automation");
+    } catch (err) {
+      console.log("Automation Stopped", err);
+    }
+  };
+
+  return (
+    <div
+      className="min-h-screen bg-cover bg-center flex items-center justify-center relative"
+      style={{
+        backgroundImage:
+          "url('https://unsplash.com/photos/a-train-with-graffiti-on-the-side-of-it-YTbFltFeqYk')",
+      }}
+    >
+      {/* <div className="absolute inset-0 bg-black bg-opacity-60" /> */}
+      <div className="relative z-10 w-full max-w-md bg-white bg-opacity-90 backdrop-blur p-8 rounded-2xl shadow-2xl">
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
+          Ads Explorer
+        </h1>
+        <div className="space-y-5">
+          <div>
+            <label
+              htmlFor="noOfAutomation"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Number Of Automation
+            </label>
+            <input
+              min="1"
+              value={noOfAutomation}
+              onChange={(e) => setNoOfAutomation(Number(e.target.value))}
+              type="number"
+              id="noOfAutomation"
+              name="noOfAutomation"
+              className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
+          <div>
+            <label
+              htmlFor="noOfPages"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Number Of Page Crawl
+            </label>
+            <input
+              min="1"
+              value={noOfPages}
+              onChange={(e) => setNoOfPages(Number(e.target.value))}
+              type="number"
+              id="noOfPages"
+              name="noOfPages"
+              className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="search"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Search <span className="text-red-500">*</span>
+            </label>
+            <input
+              value={search}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                if (e.target.value.trim()) setSearchError(null);
+              }}
+              type="text"
+              id="search"
+              name="search"
+              className={`mt-1 w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500 ${
+                searchError ? "border-red-500" : ""
+              }`}
+            />
+            {searchError && (
+              <p className="text-red-600 text-sm mt-1">{searchError}</p>
+            )}
+          </div>
+          <div>
+            <label
+              htmlFor="expectSource"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Search Expect
+            </label>
+            <input
+              value={expectSource}
+              onChange={(e) => setExpectSource(e.target.value)}
+              type="text"
+              id="expectSource"
+              name="expectSource"
+              className="mt-1 w-full px-4 py-2 border rounded-lg focus:ring-blue-500 focus:border-blue-500"
+            />
+          </div>
+          <div className="flex justify-between mt-4">
+            <button
+              onClick={startAutomation}
+              className="w-full mr-2 text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:ring-green-300 font-semibold rounded-lg text-sm px-5 py-2.5 focus:outline-none"
+            >
+              Start
+            </button>
+            <button
+              onClick={stopAutomation}
+              className="w-full ml-2 text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-300 font-semibold rounded-lg text-sm px-5 py-2.5 focus:outline-none"
+            >
+              Stop
+            </button>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }
