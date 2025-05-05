@@ -9,7 +9,7 @@ const puppeteerExtra = addExtra(puppeteer);
 //   RecaptchaPlugin({
 //     provider: {
 //       id: "2captcha",
-//       token: "d0e6eb9d23c0c74008f05cc6a19f9cfd",
+//       token: "",
 //     },
 //     visualFeedback: true,
 //   })
