@@ -14,29 +14,29 @@ const initializePuppeteer = async ({
     await chrome.init();
 
     const page = chrome.getPage();
+    // await page.goto("https://api.ipify.org");
 
     await page.goto("https://google.com/", { waitUntil: "load" });
 
     await page.type("textarea", search);
     await page.keyboard.press("Enter");
 
-    await chrome.verifyRecaptcha();
+    await chrome.verifyRecaptcha().catch(() => null);
 
     for (
       let currentAutomation = 1;
       currentAutomation <= noOfAutomation;
       currentAutomation++
     ) {
+      console.log(`Automation: ${currentAutomation}`);
       for (let currentPage = 1; currentPage <= noOfPages; currentPage++) {
-        await page.waitForSelector(`.uEierd a`).catch(() => {
-          console.log(`No Ads on page: ${currentPage}`);
-        });
+        await page.waitForSelector(`.uEierd a`).catch(() => null);
 
         const ads: string[] = await page.$$eval(".uEierd a", (links) =>
           links.flatMap((el) => (el.href ? [el.href] : []))
         );
 
-        console.log(`Total Ads Links on page ${currentPage} are ${ads.length}`);
+        console.log(`Number of Ads on page ${currentPage} are ${ads.length}`);
 
         for (const [index, link] of ads.entries()) {
           try {
@@ -58,15 +58,15 @@ const initializePuppeteer = async ({
           }
         }
 
-        // await page.waitForFunction(() => window.performance.timing.domComplete);
         await chrome.delay(3000);
-        await page.waitForNetworkIdle();
 
         await page.waitForSelector("a#pnnext");
-        await page.click("a#pnnext");
+        await page.$eval("a#pnnext", (el) => el.click());
       }
-      await page.waitForSelector('a[aria-label="Page 1"]');
-      await page.click('a[aria-label="Page 1"]');
+
+      await chrome.delay(3000);
+      await page.waitForSelector('a[aria-label="Page 1"]').catch(() => null);
+      await page.click('a[aria-label="Page 1"]').catch(() => null);
     }
     await chrome.close();
   } catch (error) {

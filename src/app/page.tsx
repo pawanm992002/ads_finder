@@ -27,13 +27,6 @@ export default function Home() {
     }
   };
 
-  console.log({
-    noOfAutomation,
-    noOfPages,
-    search,
-    expectSource,
-  });
-
   const stopAutomation = async () => {
     try {
       await axios.delete("/api/automation");
@@ -46,8 +39,7 @@ export default function Home() {
     <div
       className="min-h-screen bg-cover bg-center flex items-center justify-center relative"
       style={{
-        backgroundImage:
-          "url('https://unsplash.com/photos/a-train-with-graffiti-on-the-side-of-it-YTbFltFeqYk')",
+        backgroundImage: "url('/bg.jpg')",
       }}
     >
       {/* <div className="absolute inset-0 bg-black bg-opacity-60" /> */}
@@ -61,7 +53,7 @@ export default function Home() {
               htmlFor="noOfAutomation"
               className="block text-sm font-medium text-gray-700"
             >
-              Number Of Automation
+              Number Of Automation <span className="text-red-500">*</span>
             </label>
             <input
               min="1"
@@ -78,7 +70,7 @@ export default function Home() {
               htmlFor="noOfPages"
               className="block text-sm font-medium text-gray-700"
             >
-              Number Of Page Crawl
+              Number Of Page Crawl <span className="text-red-500">*</span>
             </label>
             <input
               min="1"
