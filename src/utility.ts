@@ -1,37 +1,7 @@
 import puppeteer, { Browser, Page } from "puppeteer";
 import { addExtra } from "puppeteer-extra";
-// import StealthPlugin from "puppeteer-extra-plugin-stealth";
-// import RecaptchaPlugin from "puppeteer-extra-plugin-recaptcha";
 
 const puppeteerExtra = addExtra(puppeteer);
-// puppeteerExtra.use(StealthPlugin());
-// puppeteerExtra.use(
-//   RecaptchaPlugin({
-//     provider: {
-//       id: "2captcha",
-//       token: "",
-//     },
-//     visualFeedback: true,
-//   })
-// );
-
-// function generateRandomProxy(): string {
-//   const proxies = [
-//     "http://51.158.154.173:3128",
-//     "http://51.159.115.233:3128",
-//     "http://134.209.29.120:3128",
-//     "http://8.219.97.248:80",
-//     "http://159.203.61.169:3128",
-//     "http://64.225.8.192:9981",
-//     "http://188.166.186.35:8282",
-//     "http://138.68.60.8:8080",
-//     "http://178.62.193.19:3128",
-//     "http://128.199.110.230:8080",
-//   ];
-
-//   const randomIndex = Math.floor(Math.random() * proxies.length);
-//   return proxies[randomIndex];
-// }
 
 export class BaseApp {
   private browser!: Browser;
@@ -41,7 +11,6 @@ export class BaseApp {
     try {
       this.browser = await puppeteerExtra.launch({
         args: [
-          // `--proxy-server=${generateRandomProxy()}`,
           "--disable-dev-shm-usage",
           "--disable-setuid-sandbox",
           "--no-first-run",
