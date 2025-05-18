@@ -20,7 +20,7 @@ export class BaseApp {
           "--disable-site-isolation-trials",
         ],
         executablePath:
-          "/tmp/localChromium/chromium/mac_arm-1449360/chrome-mac/Chromium.app/Contents/MacOS/Chromium",
+          "/tmp/localChromium/chromium/mac_arm-1457409/chrome-mac/Chromium.app/Contents/MacOS/Chromium",
         headless: false,
       });
 

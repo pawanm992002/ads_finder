@@ -40,7 +40,7 @@ const initializePuppeteer = async ({
 
         for (const [index, link] of ads.entries()) {
           try {
-            if (expectSource && link?.includes(expectSource)) {
+            if (!expectSource || !link?.includes(expectSource)) {
               console.log(`Opening ${index + 1}: ${link}`);
 
               await chrome.delay(5000);
